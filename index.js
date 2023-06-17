@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, psts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -19,6 +19,7 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+let token = "c8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd4";
 
 const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
@@ -85,6 +86,8 @@ export const goToPage = (newPage, data) => {
 
 const renderApp = () => {
   const appEl = document.getElementById("app");
+  getPosts({token}); //
+  console.log(psts); //
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
       appEl,
@@ -131,3 +134,5 @@ const renderApp = () => {
 };
 
 goToPage(POSTS_PAGE);
+
+
