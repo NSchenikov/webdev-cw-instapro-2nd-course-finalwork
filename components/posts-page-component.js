@@ -99,7 +99,7 @@ export function renderPostsPageComponent({ appEl }) {
 
   let pstsHtml = psts.map((pst, index) => {
     return   `
-    <li class="post">
+    <li class="post" data-post-index=${index}>
        <div class="post-header" data-user-id="${pst.userId}">
            <img src="${pst.userImageUrl}" class="post-header__user-image">
            <p class="post-header__user-name">${pst.userName}</p>

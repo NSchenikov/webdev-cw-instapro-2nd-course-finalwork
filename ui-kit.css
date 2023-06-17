@@ -54,6 +54,27 @@ p {
   border: none;
 }
 
+#add-button {
+  min-width: 1400px;
+}
+
+.choose-pic-button {
+  /* display: block;
+  padding: 10px 13px 13px;
+  font-size: 18px;
+  line-height: 22px;
+  border-radius: 5px;
+  background-color: #d8d9f8;
+  color: #565eef;
+  border: none; */
+  min-width: 1400px;
+}
+
+.post-description-input {
+  min-width: 1400px;
+  min-height: 100px;
+}
+
 .link-button {
   display: inline;
   border: 0;
