@@ -6,6 +6,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     // TODO: Реализовать страницу добавления поста
 
     const appHtml = `
+    <div class="head"></div>
     <div class="post-page-container">
       <div class="header-container" id="add-post-header"></div>
       Добавить пост
@@ -20,6 +21,10 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   `;
 
     appEl.innerHTML = appHtml;
+
+      renderHeaderComponent({
+        element: document.querySelector(".head")
+      });
 
       renderUploadImageComponent({
         element: document.querySelector(".choose-pic-button"),
