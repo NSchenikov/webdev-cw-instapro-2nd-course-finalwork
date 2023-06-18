@@ -1,5 +1,6 @@
 import { renderHeaderComponent } from "./header-component.js";
-import { renderUploadImageComponent } from "./upload-image-component.js"
+import { renderUploadImageComponent } from "./upload-image-component.js";
+import { uploadImage } from "../api.js";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -31,12 +32,20 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         onImageUrlChange: (imageUrl) => {
           imageUrl = imageUrl;
         }
-      })
+      });
+
+      const postDescriptionInput = document.querySelector('.post-description-input');
 
     document.getElementById("add-button").addEventListener("click", () => {
       onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
+        description: postDescriptionInput.value,
+        imageUrl: uploadImage({
+          file: "https://image.png",
+        })
+        .then((data) => {
+            console.log(data.fileUrl);
+            return data.fileUrl;
+        })
       });
     });
   };
