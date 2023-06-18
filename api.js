@@ -3,9 +3,9 @@
 
 import { renderApp } from "./index.js";
 
-const personalKey = "prod";
-// const personalKey = "NSchenikov";
-const baseHost = "https://webdev-hw-api.vercel.app";
+// const personalKey = "prod";
+const personalKey = "NSchenikov";
+const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 export let psts = [];
 
@@ -49,31 +49,31 @@ export function getPosts({ token }) {
     // });
 }
 
-// export function sendPost({ token }) {
-//   return fetch(postsHost, {
-//     method: "POST",
-//     body: JSON.stringify({
-//       description: description,
-//       imageUrl: imageUrl,
-//       // forceError: true,
-//     }),
-//     headers: {
-//       Authorization: token,
-//     },
-//   })
-//     .then((response) => {
-//       if (response.status === 401) {
-//         throw new Error("Нет авторизации");
-//       }
+export function sendPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    body: JSON.stringify({
+      description: description,
+      imageUrl: imageUrl,
+      // forceError: true,
+    }),
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
 
-//       return response.json();
-//     })
-//     .then((responseData) => {
-//       console.log(responseData);
-//       getPosts(token);
-//       renderApp();
-//     });
-// }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log(responseData);
+      getPosts(token);
+      renderApp();
+    });
+}
 
 // https://github.com/GlebkaF/webdev-hw-api/blob/main/pages/api/user/README.md#%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D1%81%D1%8F
 export function registerUser({ login, password, name, imageUrl }) {
@@ -113,7 +113,7 @@ export function uploadImage({ file }) {
   const data = new FormData();
   data.append("file", file);
 
-  return fetch(baseHost + "/api/upload/image", {
+  return fetch(baseHost + "/api/upload/image", { 
     method: "POST",
     body: data,
   }).then((response) => {

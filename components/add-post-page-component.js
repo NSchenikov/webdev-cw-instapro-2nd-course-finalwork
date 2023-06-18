@@ -1,6 +1,9 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
-import { uploadImage } from "../api.js";
+import { sendPost, uploadImage } from "../api.js";
+import { token } from "../index.js";
+
+let url = '';
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -31,21 +34,37 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         element: document.querySelector(".choose-pic-button"),
         onImageUrlChange: (imageUrl) => {
           imageUrl = imageUrl;
+          url = imageUrl;
         }
       });
 
       const postDescriptionInput = document.querySelector('.post-description-input');
 
     document.getElementById("add-button").addEventListener("click", () => {
-      onAddPostClick({
-        description: postDescriptionInput.value,
-        imageUrl: uploadImage({
-          file: "https://image.png",
-        })
-        .then((data) => {
+      uploadImage({ url })
+            .then((data) => {
             console.log(data.fileUrl);
-            return data.fileUrl;
+            url = data.fileUrl;
+            return url;
         })
+      ;
+      onAddPostClick({
+        // description: postDescriptionInput.value,
+        // imageUrl: uploadImage({
+        //   file: "https://image.png",
+        // })
+        // .then((data) => {
+        //     console.log(data.fileUrl);
+        //     return data.fileUrl;
+        // })
+
+        description: postDescriptionInput.value,
+        imageUrl: url,
+      });
+      sendPost({
+        token: "c8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd4", 
+        description: postDescriptionInput.value,
+        imageUrl: url,
       });
     });
   };

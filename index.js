@@ -19,7 +19,7 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
-let token = "c8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd4";
+export let token = "c8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd4";
 
 const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
