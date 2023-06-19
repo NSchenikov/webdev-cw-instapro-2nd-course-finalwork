@@ -1,7 +1,5 @@
 import { uploadImage } from "../api.js";
 
-export let url = '';
-
 export function renderUploadImageComponent({ element, onImageUrlChange }) {
   let imageUrl = "";
 
