@@ -124,7 +124,7 @@ export function renderPostsPageComponent({ appEl }) {
        </p>
      </li>
   `;
-  });
+  }).join('');
 
 
   const appHtml = `
