@@ -3,8 +3,8 @@
 
 import { renderApp } from "./index.js";
 
-const personalKey = "prod";
-// const personalKey = "NSchenikov";
+// const personalKey = "prod";
+const personalKey = "NSchenikov";
 const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 export let psts = [];
@@ -89,6 +89,44 @@ export function sendPost({ token, description, imageUrl }) {
       console.log(responseData);
       getPosts(token);
       renderApp();
+    });
+}
+
+export function putLike({ token, id }) {
+  return fetch(postsHost + `/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log('putlike done');
+      psts = responseData;
+    });
+}
+
+export function putDislike({ token, id }) {
+  return fetch(postsHost + `/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log('putdislike done');
+      psts = responseData;
     });
 }
 
