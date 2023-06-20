@@ -3,13 +3,13 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 import { getPosts, psts, userPsts } from "../api.js";
 
-export function renderUserPostsPageComponent({ appEl }) {
+export function renderUserPostsPageComponent({ appEl, userPsts }) {
     let pstsHtml = userPsts.map((pst, index) => {
         return   `
         <li class="post" data-post-index=${index}>
-           <div class="post-header" data-user-id="${pst.userId}">
-               <img src="${pst.userImageUrl}" class="post-header__user-image">
-               <p class="post-header__user-name">${pst.userName}</p>
+           <div class="post-header" data-user-id="${pst.user.id}">
+               <img src="${pst.user.imageUrl}" class="post-header__user-image">
+               <p class="post-header__user-name">${pst.user.name}</p>
            </div>
            <div class="post-image-container">
              <img class="post-image" src=${pst.imageUrl}>
@@ -23,8 +23,8 @@ export function renderUserPostsPageComponent({ appEl }) {
             </p>
            </div>
            <p class="post-text">
-             <span class="user-name">${pst.userName}</span>
-             ${pst.text}
+             <span class="user-name">${pst.user.name}</span>
+             ${pst.description}
            </p>
            <p class="post-date">
             ### минут назад

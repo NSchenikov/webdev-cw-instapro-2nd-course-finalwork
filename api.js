@@ -45,9 +45,6 @@ export function getPosts({ token }) {
     .then((data) => {
       psts = data;
     });
-    // .then((data) => {
-    //   return data.posts;
-    // });
 }
 
 export function getUsersPosts({ token, id }) {
@@ -61,30 +58,11 @@ export function getUsersPosts({ token, id }) {
       if (response.status === 401) {
         throw new Error("Нет авторизации");
       }
-
       return response.json();
     })
     .then((responseData) => {
-      const appPosts = responseData.posts
-      .map((post) => {
-        return {
-          id: post.id,
-          imageUrl: post.imageUrl,
-          date: post.createdAt,
-          text: post.description,
-          userId: post.user.id,
-          userName: post.user.name,
-          login: post.user.login,
-          userImageUrl: post.user.imageUrl,
-          likes: post.likes,
-          isLiked: post.isLiked,
-        };
-      });
-      return appPosts;
-    })
-    .then((data) => {
-      userPsts = data;
-      console.log(`user posts ${userPsts}`);
+       userPsts = responseData.posts;
+      return userPsts;
     });
 }
 

@@ -130,17 +130,14 @@ export const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу фотографию пользвателя
-    // appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    // goToPage(USER_POSTS_PAGE);
-    console.log(`айди юзера ${key}`);
     getUsersPosts({
       token: token,
       id: key,
+    })
+    .then((newPosts) => {
+      let userPsts = newPosts;
+      return renderUserPostsPageComponent({ appEl, userPsts });
     });
-    console.log(`посты юзера ${userPsts}`);
-    renderUserPostsPageComponent({ appEl, });
-    return;
   }
 };
 
