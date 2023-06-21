@@ -20,10 +20,9 @@ import { renderUserPostsPageComponent } from "./components/user-posts-page-compo
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
-export let token = "Bearer c8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd46gc8csb0bkb8c8bobwccd4";
 let key = '';
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -89,7 +88,7 @@ export const goToPage = (newPage, data) => {
 
 export const renderApp = () => {
   const appEl = document.getElementById("app");
-  getPosts({token}); //
+  getPosts({getToken}); //
   console.log(psts); //
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
@@ -131,7 +130,7 @@ export const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     getUsersPosts({
-      token: token,
+      token: getToken(),
       id: key,
     })
     .then((newPosts) => {

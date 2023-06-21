@@ -3,8 +3,8 @@
 
 import { renderApp } from "./index.js";
 
-// const personalKey = "prod";
-const personalKey = "NSchenikov";
+const personalKey = "prod";
+// const personalKey = "NSchenikov";
 const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 export let psts = [];

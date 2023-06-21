@@ -1,7 +1,7 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { sendPost, uploadImage } from "../api.js";
-import { token } from "../index.js";
+import { getToken } from "../index.js";
 
 let url = '';
 
@@ -62,7 +62,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         imageUrl: url,
       });
       sendPost({
-        token: token, 
+        token: getToken(), 
         description: postDescriptionInput.value,
         imageUrl: url,
       });

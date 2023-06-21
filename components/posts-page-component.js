@@ -1,6 +1,6 @@
 import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, token } from "../index.js";
+import { posts, goToPage, getToken } from "../index.js";
 import { getPosts, psts, putDislike, putLike } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
@@ -70,19 +70,19 @@ export function renderPostsPageComponent({ appEl }) {
         if(postLike.dataset.isliked) {
           console.log(`id поста ${postLike.dataset.postId}`);
           putLike({
-            token: token,
+            token: getToken(),
             id: postLike.dataset.postId,
           });
-          getPosts({ token });
+          getPosts({ getToken });
           rendering(psts);
           console.log(psts);
         } else if(!postLike.dataset.isliked) {
           console.log(`id поста ${postLike.dataset.postId}`);
           putDislike({
-            token: token,
+            token: getToken(),
             id: postLike.dataset.postId,
           });
-          getPosts({ token });
+          getPosts({ getToken });
           rendering(psts);
         }
       });
