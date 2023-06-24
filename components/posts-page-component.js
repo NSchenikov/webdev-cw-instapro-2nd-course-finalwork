@@ -1,13 +1,12 @@
 import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
-import { getPosts, psts, putDislike, putLike } from "../api.js";
+import { posts, goToPage, getToken, renderApp } from "../index.js";
+import { getPosts, putDislike, putLike } from "../api.js";
 
 export function renderPostsPageComponent({ appEl, psts }) {
   // TODO: реализовать рендер постов из api +
 
   function initLikes() {
-    // rendering();
     for(let postLike of document.querySelectorAll(".like-button")) {
       let index = postLike.dataset.index;
       postLike.addEventListener("click", () => {
@@ -19,9 +18,17 @@ export function renderPostsPageComponent({ appEl, psts }) {
           })
           .then(() => {
             getPosts({ getToken });
+            psts[index].isLiked = false; 
+            psts[index].likes.forEach((user, indx) => {
+              // console.log(user.id);
+              if(user.id === JSON.parse(window.localStorage.getItem("user"))._id) { //берем залогиненого пользователя, которого запомнил браузер после авторизации
+                psts[index].likes.splice(indx, 1); //удаляем из локального объекта постов лайк текущего пользователя
+              }
+            });
+            // console.log(psts);
           })
           .then(() => {
-            rendering();
+            return rendering();
           });
         } else if(postLike.dataset.isliked === 'false') {
           putLike({
@@ -30,17 +37,47 @@ export function renderPostsPageComponent({ appEl, psts }) {
           })
           .then(() => {
             getPosts({ getToken });
+            psts[index].isLiked = true;
+            psts[index].likes.push({id: JSON.parse(window.localStorage.getItem("user"))._id, name: JSON.parse(window.localStorage.getItem("user")).name}); //добавляем сохраненного браузером пользователя в локальный массив постов
           })
           .then(() => {
-            rendering();
+            return rendering();
           });
+          // console.log(psts);
         }
-        rendering();
       });
     }
+
+
+    // [...document.querySelectorAll(".like-button")].forEach((postLike, index) => {
+    //   postLike.addEventListener('click', () => {
+    //     if(psts[index].isLiked) {
+    //       putDislike({
+    //         token: getToken(),
+    //         id: postLike.dataset.postId,
+    //       })
+    //       .then(newPost => {
+    //         psts.splice(index, 1, newPost);
+    //         rendering();
+    //       })
+    //       .catch(error => alert(error.message));
+    //     } else {
+    //       putLike({
+    //         token: getToken(),
+    //         id: postLike.dataset.postId,
+    //       })
+    //       .then(newPost => {
+    //         psts.splice(index, 1, newPost);
+    //         rendering();
+    //       })
+    //       .catch(error => alert(error.message));
+    //     }
+    //   });
+    // });
+
   }
 
-  const rendering = () => {
+  function rendering() {
       let pstsHtml = psts.map((pst, index) => {
         return   `
         <li class="post" data-post-index=${index}>
@@ -52,7 +89,7 @@ export function renderPostsPageComponent({ appEl, psts }) {
             <img class="post-image" src=${pst.imageUrl}>
           </div>
           <div class="post-likes">
-            <button data-post-id=${pst.id} data-isLiked=${pst.isLiked} data-index=${index} class="like-button">
+            <button data-post-id=${pst.id} data-isLiked=${pst.isLiked} data-index=${index} data-userId=${pst.userId} data-username=${pst.userName} class="like-button">
               <img src="./assets/images/${pst.isLiked ? "like-active" : "like-not-active"}.svg">
             </button>
             <p class="post-likes-text">
@@ -88,7 +125,7 @@ export function renderPostsPageComponent({ appEl, psts }) {
         element: document.querySelector(".header-container"),
       });
       initLikes();
-  }
+  };
 
 
   rendering();

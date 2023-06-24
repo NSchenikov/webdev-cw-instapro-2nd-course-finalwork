@@ -108,6 +108,7 @@ export function putLike({ token, id }) {
     .then((responseData) => {
       console.log('putlike done');
       psts = responseData;
+      return psts;
     });
 }
 
@@ -127,6 +128,7 @@ export function putDislike({ token, id }) {
     .then((responseData) => {
       console.log('putdislike done');
       psts = responseData;
+      return psts;
     });
 }
 
