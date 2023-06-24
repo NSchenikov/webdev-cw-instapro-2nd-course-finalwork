@@ -3,10 +3,44 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
 import { getPosts, psts, putDislike, putLike } from "../api.js";
 
-export function renderPostsPageComponent({ appEl }) {
+export function renderPostsPageComponent({ appEl, psts }) {
   // TODO: реализовать рендер постов из api +
 
-  function rendering(psts) {
+  function initLikes() {
+    // rendering();
+    for(let postLike of document.querySelectorAll(".like-button")) {
+      let index = postLike.dataset.index;
+      postLike.addEventListener("click", () => {
+        console.log(`уже лайкнут? ${postLike.dataset.isliked}`);
+        if(postLike.dataset.isliked === 'true') {
+          putDislike({
+            token: getToken(),
+            id: postLike.dataset.postId,
+          })
+          .then(() => {
+            getPosts({ getToken });
+          })
+          .then(() => {
+            rendering();
+          });
+        } else if(postLike.dataset.isliked === 'false') {
+          putLike({
+            token: getToken(),
+            id: postLike.dataset.postId,
+          })
+          .then(() => {
+            getPosts({ getToken });
+          })
+          .then(() => {
+            rendering();
+          });
+        }
+        rendering();
+      });
+    }
+  }
+
+  const rendering = () => {
       let pstsHtml = psts.map((pst, index) => {
         return   `
         <li class="post" data-post-index=${index}>
@@ -18,7 +52,7 @@ export function renderPostsPageComponent({ appEl }) {
             <img class="post-image" src=${pst.imageUrl}>
           </div>
           <div class="post-likes">
-            <button data-post-id=${pst.id} data-isLiked=${pst.isLiked} class="like-button">
+            <button data-post-id=${pst.id} data-isLiked=${pst.isLiked} data-index=${index} class="like-button">
               <img src="./assets/images/${pst.isLiked ? "like-active" : "like-not-active"}.svg">
             </button>
             <p class="post-likes-text">
@@ -53,8 +87,13 @@ export function renderPostsPageComponent({ appEl }) {
       renderHeaderComponent({
         element: document.querySelector(".header-container"),
       });
+      initLikes();
   }
-  rendering(psts);
+
+
+  rendering();
+    // initLikes();
+
 
   for (let userEl of document.querySelectorAll(".post-header")) {
     userEl.addEventListener("click", () => {
@@ -64,27 +103,6 @@ export function renderPostsPageComponent({ appEl }) {
     });
   }
 
-  for(let postLike of document.querySelectorAll(".like-button")) {
-      postLike.addEventListener("click", () => {
-        console.log(postLike.dataset.isliked);
-        if(postLike.dataset.isliked) {
-          console.log(`id поста ${postLike.dataset.postId}`);
-          putLike({
-            token: getToken(),
-            id: postLike.dataset.postId,
-          });
-          getPosts({ getToken });
-          rendering(psts);
-          console.log(psts);
-        } else if(!postLike.dataset.isliked) {
-          console.log(`id поста ${postLike.dataset.postId}`);
-          putDislike({
-            token: getToken(),
-            id: postLike.dataset.postId,
-          });
-          getPosts({ getToken });
-          rendering(psts);
-        }
-      });
-  }
+
 }
+
