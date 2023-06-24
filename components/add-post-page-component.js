@@ -46,24 +46,17 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
             console.log(data.fileUrl);
             url = data.fileUrl;
             return url;
-        })
-      ;
-      onAddPostClick({
-        // description: postDescriptionInput.value,
-        // imageUrl: uploadImage({
-        //   file: "https://image.png",
-        // })
-        // .then((data) => {
-        //     console.log(data.fileUrl);
-        //     return data.fileUrl;
-        // })
+        });
 
+      onAddPostClick({
         description: postDescriptionInput.value,
         imageUrl: url,
       });
       sendPost({
         token: getToken(), 
-        description: postDescriptionInput.value,
+        description: postDescriptionInput.value
+          .replaceAll('<', '&lt')
+          .replaceAll('>', '&gt'),
         imageUrl: url,
       });
     });
