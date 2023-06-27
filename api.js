@@ -1,8 +1,14 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
+
+import { renderApp } from "./index.js";
+
 const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
+// const personalKey = "NSchenikov";
+const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
+export let psts = [];
+export let userPsts = [];
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
@@ -18,8 +24,115 @@ export function getPosts({ token }) {
 
       return response.json();
     })
+    .then((responseData) => {
+      const appPosts = responseData.posts
+      .map((post) => {
+        return {
+          id: post.id,
+          imageUrl: post.imageUrl,
+          date: post.createdAt,
+          text: post.description,
+          userId: post.user.id,
+          userName: post.user.name,
+          login: post.user.login,
+          userImageUrl: post.user.imageUrl,
+          likes: post.likes,
+          isLiked: post.isLiked,
+        };
+      });
+      return appPosts;
+    })
     .then((data) => {
-      return data.posts;
+      psts = data;
+    });
+}
+
+export function getUsersPosts({ token, id }) {
+  return fetch(postsHost + "/user-posts/" + id, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+       userPsts = responseData.posts;
+      return userPsts;
+    });
+}
+
+export function sendPost({ token, description, imageUrl }) {
+  return fetch(postsHost, {
+    method: "POST",
+    body: JSON.stringify({
+      description: description,
+      imageUrl: imageUrl,
+      // forceError: true,
+    }),
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      if (response.status === 400) {
+        alert(`Пожалуйста, заполните все поля и загрузите изображение`);
+        throw new Error("Поля не заполнены!");
+      }
+
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log(responseData);
+      getPosts(token);
+      renderApp();
+    });
+}
+
+export function putLike({ token, id }) {
+  return fetch(postsHost + `/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log('putlike done');
+      psts = responseData;
+      return psts;
+    });
+}
+
+export function putDislike({ token, id }) {
+  return fetch(postsHost + `/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log('putdislike done');
+      psts = responseData;
+      return psts;
     });
 }
 
@@ -61,10 +174,13 @@ export function uploadImage({ file }) {
   const data = new FormData();
   data.append("file", file);
 
-  return fetch(baseHost + "/api/upload/image", {
+  return fetch(baseHost + "/api/upload/image", { 
     method: "POST",
     body: data,
   }).then((response) => {
     return response.json();
   });
+  // .then((data) => {
+  //   return(data.fileUrl);
+  // });
 }
